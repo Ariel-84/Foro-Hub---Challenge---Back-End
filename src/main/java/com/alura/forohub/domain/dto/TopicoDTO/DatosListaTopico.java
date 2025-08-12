@@ -1,11 +1,12 @@
-package com.alura.forohub.dto;
+package com.alura.forohub.domain.dto.TopicoDTO;
 
 import com.alura.forohub.domain.model.Topico;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public record DatosDetalleTopico(
+public record DatosListaTopico(
+        Long id,
         String titulo,
         String mensaje,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -14,14 +15,15 @@ public record DatosDetalleTopico(
         String autor,
         String curso
 ) {
-    public DatosDetalleTopico(Topico topico) {
+    public DatosListaTopico(Topico topico) {
         this(
+                topico.getId(),
                 topico.getTitulo(),
                 topico.getMensaje(),
                 topico.getFechaCreacion(),
                 topico.getStatus(),
-                topico.getAutor(),
-                topico.getCurso()
+                topico.getAutor() != null ? topico.getAutor().getNombre() : "Sin autor",
+                topico.getCurso() != null ? topico.getCurso().getNombre() : "Sin curso"
         );
     }
 }

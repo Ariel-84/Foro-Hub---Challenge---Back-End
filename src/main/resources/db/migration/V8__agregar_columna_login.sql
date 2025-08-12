@@ -1,0 +1,2 @@
+ALTER TABLE usuarios ADD COLUMN login VARCHAR(100) NOT NULL;
+

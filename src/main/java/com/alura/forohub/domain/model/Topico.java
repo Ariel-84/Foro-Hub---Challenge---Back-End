@@ -1,15 +1,17 @@
 package com.alura.forohub.domain.model;
 
-import com.alura.forohub.dto.DatosRegistroTopico;
+import com.alura.forohub.domain.dto.TopicoDTO.DatosRegistroTopico;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "topicos")
 @Entity(name = "Topico")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -24,29 +26,27 @@ public class Topico {
     @Column(columnDefinition = "TEXT")
     private String mensaje;
 
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    private String status;
+    private String status = "NO_RESPONDIDO";
 
-    private String autor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
 
-    private String curso;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
 
-    public Topico(DatosRegistroTopico datos) {
+    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Respuesta> respuestas = new ArrayList<>();
+
+    public Topico(DatosRegistroTopico datos, Usuario autor, Curso curso) {
         this.titulo = datos.titulo();
         this.mensaje = datos.mensaje();
         this.fechaCreacion = LocalDateTime.now();
         this.status = "NO_RESPONDIDO";
-        this.autor = datos.autor();
-        this.curso = datos.curso();
+        this.autor = autor;
+        this.curso = curso;
     }
-
-    public void setTitulo(@NotBlank String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setMensaje(@NotBlank String mensaje) {
-        this.mensaje = mensaje;
-    }
-
 }
